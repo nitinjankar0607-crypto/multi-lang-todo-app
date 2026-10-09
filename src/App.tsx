@@ -10,6 +10,8 @@ import { LANGUAGES } from './types'
 
 type ThemeMode = 'light' | 'dark'
 
+const DEFAULT_THEME: ThemeMode = 'light'
+
 function App() {
   const { t } = useTranslation()
   const { todos, addTodo, deleteTodo, toggleTodo, editTodo, syncSampleTodo } = useTodos()
@@ -28,12 +30,14 @@ function App() {
   })
   const [theme, setTheme] = useState<ThemeMode>(() => {
     if (typeof window === 'undefined') {
-      return 'light'
+      return DEFAULT_THEME
     }
 
     const storedTheme = window.localStorage.getItem('multi-lang-todo-app.theme')
-    return storedTheme === 'dark' ? 'dark' : 'light'
+    return storedTheme === 'dark' ? 'dark' : DEFAULT_THEME
   })
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
 
   useEffect(() => {
     window.localStorage.setItem('multi-lang-todo-app.language', language)
@@ -65,6 +69,14 @@ function App() {
     }
   }, [syncSampleTodo, t, todos])
 
+  useEffect(() => {
+    const totalPages = Math.max(1, Math.ceil(todos.length / pageSize))
+    setPage((currentPage) => Math.min(currentPage, totalPages))
+  }, [pageSize, todos.length])
+
+  const totalPages = Math.max(1, Math.ceil(todos.length / pageSize))
+  const safePage = Math.min(page, totalPages)
+  const paginatedTodos = todos.slice((safePage - 1) * pageSize, safePage * pageSize)
   const isDarkTheme = theme === 'dark'
 
   return (
@@ -97,7 +109,16 @@ function App() {
           />
 
           <TodoList
-            todos={todos}
+            todos={paginatedTodos}
+            totalItems={todos.length}
+            page={safePage}
+            pageSize={pageSize}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            onPageSizeChange={(nextPageSize) => {
+              setPageSize(nextPageSize)
+              setPage(1)
+            }}
             onToggle={toggleTodo}
             onDelete={deleteTodo}
             onEdit={editTodo}
