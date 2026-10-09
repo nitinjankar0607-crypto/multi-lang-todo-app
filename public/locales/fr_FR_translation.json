@@ -1,0 +1,12 @@
+{
+  "title": "Application de tâches",
+  "demoTask": "Lire 5 minutes",
+  "add": "Ajouter une tâche",
+  "placeholder": "Ajouter une nouvelle tâche",
+  "emptyState": "Aucune tâche pour le moment.",
+  "delete": "Supprimer",
+  "edit": "Modifier",
+  "save": "Enregistrer",
+  "cancel": "Annuler",
+  "language": "Langue"
+}

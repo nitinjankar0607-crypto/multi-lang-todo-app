@@ -1,0 +1,12 @@
+{
+  "title": "Lista de tareas",
+  "demoTask": "Lee 5 minutos",
+  "add": "Agregar tarea",
+  "placeholder": "Agrega una nueva tarea",
+  "emptyState": "Todavía no hay tareas.",
+  "delete": "Eliminar",
+  "edit": "Editar",
+  "save": "Guardar",
+  "cancel": "Cancelar",
+  "language": "Idioma"
+}

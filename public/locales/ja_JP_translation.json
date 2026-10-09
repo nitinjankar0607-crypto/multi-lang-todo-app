@@ -1,0 +1,12 @@
+{
+  "title": "やることリスト",
+  "demoTask": "5分読む",
+  "add": "タスクを追加",
+  "placeholder": "新しいタスクを入力",
+  "emptyState": "まだタスクはありません。",
+  "delete": "削除",
+  "edit": "編集",
+  "save": "保存",
+  "cancel": "キャンセル",
+  "language": "言語"
+}

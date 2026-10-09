@@ -1,0 +1,12 @@
+{
+  "title": "Aufgabenliste",
+  "demoTask": "5 Minuten lesen",
+  "add": "Aufgabe hinzufügen",
+  "placeholder": "Neue Aufgabe hinzufügen",
+  "emptyState": "Noch keine Aufgaben.",
+  "delete": "Löschen",
+  "edit": "Bearbeiten",
+  "save": "Speichern",
+  "cancel": "Abbrechen",
+  "language": "Sprache"
+}

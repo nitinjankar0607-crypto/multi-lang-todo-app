@@ -1,0 +1,12 @@
+{
+  "title": "Todo App",
+  "demoTask": "Read 5 mins",
+  "add": "Add Todo",
+  "placeholder": "Add a new task",
+  "emptyState": "No tasks yet.",
+  "delete": "Delete",
+  "edit": "Edit",
+  "save": "Save",
+  "cancel": "Cancel",
+  "language": "Language"
+}
