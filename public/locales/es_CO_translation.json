@@ -8,5 +8,14 @@
   "edit": "Editar",
   "save": "Guardar",
   "cancel": "Cancelar",
-  "language": "Idioma"
+  "language": "Idioma",
+  "searchPlaceholder": "Buscar tareas",
+  "filterAll": "Todas",
+  "filterActive": "Activas",
+  "filterCompleted": "Completas",
+  "page": "Página",
+  "of": "de",
+  "prev": "Ant.",
+  "next": "Sig.",
+  "rows": "Filas"
 }

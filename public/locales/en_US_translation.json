@@ -8,5 +8,14 @@
   "edit": "Edit",
   "save": "Save",
   "cancel": "Cancel",
-  "language": "Language"
+  "language": "Language",
+  "searchPlaceholder": "Search tasks",
+  "filterAll": "All",
+  "filterActive": "Active",
+  "filterCompleted": "Completed",
+  "page": "Page",
+  "of": "of",
+  "prev": "Prev",
+  "next": "Next",
+  "rows": "Rows"
 }

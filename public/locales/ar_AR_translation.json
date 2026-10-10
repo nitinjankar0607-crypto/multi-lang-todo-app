@@ -8,5 +8,14 @@
   "edit": "تعديل",
   "save": "حفظ",
   "cancel": "إلغاء",
-  "language": "اللغة"
+  "language": "اللغة",
+  "searchPlaceholder": "بحث عن المهام",
+  "filterAll": "الكل",
+  "filterActive": "نشط",
+  "filterCompleted": "مكتمل",
+  "page": "صفحة",
+  "of": "من",
+  "prev": "السابق",
+  "next": "التالي",
+  "rows": "الصفوف"
 }

@@ -9,8 +9,10 @@ import type { SupportedLocale } from './types'
 import { LANGUAGES } from './types'
 
 type ThemeMode = 'light' | 'dark'
+type FilterMode = 'all' | 'active' | 'completed'
 
 const DEFAULT_THEME: ThemeMode = 'light'
+const PAGE_SIZE_OPTIONS = [5, 10, 20, 30]
 
 function App() {
   const { t } = useTranslation()
@@ -37,7 +39,16 @@ function App() {
     return storedTheme === 'dark' ? 'dark' : DEFAULT_THEME
   })
   const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
+  const [pageSize, setPageSize] = useState<number>(() => {
+    if (typeof window === 'undefined') {
+      return 10
+    }
+
+    const storedPageSize = Number(window.localStorage.getItem('multi-lang-todo-app.pageSize'))
+    return PAGE_SIZE_OPTIONS.includes(storedPageSize) ? storedPageSize : 10
+  })
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filter, setFilter] = useState<FilterMode>('all')
 
   useEffect(() => {
     window.localStorage.setItem('multi-lang-todo-app.language', language)
@@ -46,6 +57,10 @@ function App() {
   useEffect(() => {
     window.localStorage.setItem('multi-lang-todo-app.theme', theme)
   }, [theme])
+
+  useEffect(() => {
+    window.localStorage.setItem('multi-lang-todo-app.pageSize', String(pageSize))
+  }, [pageSize])
 
   useEffect(() => {
     void loadLanguage(language).catch((error) => {
@@ -61,22 +76,40 @@ function App() {
   useEffect(() => {
     const nextSampleText = t('demoTask')
     const needsSampleRefresh = todos.some(
-      (todo) => todo.isSample && todo.text !== nextSampleText,
+      (todo) => todo.isSample && (todo.translations?.[language] ?? todo.text) !== nextSampleText,
     )
 
     if (needsSampleRefresh) {
-      syncSampleTodo(nextSampleText)
+      syncSampleTodo(nextSampleText, language)
     }
-  }, [syncSampleTodo, t, todos])
+  }, [language, syncSampleTodo, t, todos])
 
   useEffect(() => {
-    const totalPages = Math.max(1, Math.ceil(todos.length / pageSize))
-    setPage((currentPage) => Math.min(currentPage, totalPages))
-  }, [pageSize, todos.length])
+    setPage(1)
+  }, [language, searchTerm, filter])
 
-  const totalPages = Math.max(1, Math.ceil(todos.length / pageSize))
+  const normalizedSearchTerm = searchTerm.trim().toLowerCase()
+  const filteredTodos = todos.filter((todo) => {
+    const todoText = todo.translations?.[language] ?? todo.text
+    const matchesSearch =
+      normalizedSearchTerm.length === 0 || todoText.toLowerCase().includes(normalizedSearchTerm)
+
+    const matchesFilter =
+      filter === 'all' ||
+      (filter === 'active' && !todo.completed) ||
+      (filter === 'completed' && todo.completed)
+
+    return matchesSearch && matchesFilter
+  })
+
+  useEffect(() => {
+    const totalPages = Math.max(1, Math.ceil(filteredTodos.length / pageSize))
+    setPage((currentPage) => Math.min(currentPage, totalPages))
+  }, [filteredTodos.length, pageSize])
+
+  const totalPages = Math.max(1, Math.ceil(filteredTodos.length / pageSize))
   const safePage = Math.min(page, totalPages)
-  const paginatedTodos = todos.slice((safePage - 1) * pageSize, safePage * pageSize)
+  const paginatedTodos = filteredTodos.slice((safePage - 1) * pageSize, safePage * pageSize)
   const isDarkTheme = theme === 'dark'
 
   return (
@@ -104,16 +137,21 @@ function App() {
           <InputField
             placeholder={t('placeholder')}
             buttonText={t('add')}
-            onAddTodo={addTodo}
+            onAddTodo={(value) => addTodo(value, language)}
             darkMode={isDarkTheme}
           />
 
           <TodoList
             todos={paginatedTodos}
-            totalItems={todos.length}
+            language={language}
+            totalItems={filteredTodos.length}
             page={safePage}
             pageSize={pageSize}
             totalPages={totalPages}
+            searchValue={searchTerm}
+            filterValue={filter}
+            onSearchChange={setSearchTerm}
+            onFilterChange={setFilter}
             onPageChange={setPage}
             onPageSizeChange={(nextPageSize) => {
               setPageSize(nextPageSize)
@@ -121,8 +159,17 @@ function App() {
             }}
             onToggle={toggleTodo}
             onDelete={deleteTodo}
-            onEdit={editTodo}
+            onEdit={(id, value) => editTodo(id, value, language)}
             emptyText={t('emptyState')}
+            searchPlaceholder={t('searchPlaceholder')}
+            filterAllLabel={t('filterAll')}
+            filterActiveLabel={t('filterActive')}
+            filterCompletedLabel={t('filterCompleted')}
+            pageLabel={t('page')}
+            ofLabel={t('of')}
+            prevLabel={t('prev')}
+            nextLabel={t('next')}
+            rowsLabel={t('rows')}
             editLabel={t('edit')}
             deleteLabel={t('delete')}
             saveLabel={t('save')}
