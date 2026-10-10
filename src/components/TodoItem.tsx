@@ -1,11 +1,12 @@
-import { useState } from 'react'
-import type { Todo } from '../types'
+import { useEffect, useState } from 'react'
+import type { SupportedLocale, Todo } from '../types'
 
 type TodoItemProps = {
   todo: Todo
+  language: SupportedLocale
   onToggle: (id: number) => void
   onDelete: (id: number) => void
-  onEdit: (id: number, text: string) => void
+  onEdit: (id: number, text: string, language: SupportedLocale) => void
   editLabel: string
   deleteLabel: string
   saveLabel: string
@@ -15,6 +16,7 @@ type TodoItemProps = {
 
 function TodoItem({
   todo,
+  language,
   onToggle,
   onDelete,
   onEdit,
@@ -25,23 +27,30 @@ function TodoItem({
   darkMode = false,
 }: TodoItemProps) {
   const [isEditing, setIsEditing] = useState(false)
-  const [draft, setDraft] = useState(todo.text)
+  const displayText = todo.translations?.[language] ?? todo.text
+  const [draft, setDraft] = useState(displayText)
+
+  useEffect(() => {
+    setDraft(displayText)
+  }, [displayText])
 
   const handleSave = () => {
     const trimmedDraft = draft.trim()
 
-    if (!trimmedDraft || trimmedDraft === todo.text) {
+    if (!trimmedDraft || trimmedDraft === displayText) {
       return
     }
 
-    onEdit(todo.id, trimmedDraft)
+    onEdit(todo.id, trimmedDraft, language)
     setIsEditing(false)
   }
 
   const handleCancel = () => {
-    setDraft(todo.text)
+    setDraft(displayText)
     setIsEditing(false)
   }
+
+  const toggleLabel = `${todo.completed ? 'Mark as incomplete' : 'Mark as complete'}: ${displayText}`
 
   return (
     <li
@@ -60,12 +69,12 @@ function TodoItem({
           type="checkbox"
           checked={todo.completed}
           onChange={() => onToggle(todo.id)}
-          aria-label={editLabel}
-          className="h-4 w-4"
+          aria-label={toggleLabel}
+          className="h-4 w-4 shrink-0"
         />
 
         {isEditing ? (
-          <div className="flex items-center gap-2">
+          <div className="flex flex-1 items-center gap-2">
             <input
               type="text"
               value={draft}
@@ -82,7 +91,7 @@ function TodoItem({
                 }
               }}
               aria-label={editLabel}
-              className={`rounded-md border px-2 py-1 ${
+              className={`flex-1 rounded-md border px-2 py-1.5 text-sm ${
                 darkMode
                   ? 'border-slate-600 bg-slate-800 text-slate-100'
                   : 'border-gray-200 bg-white text-slate-900'
@@ -91,14 +100,14 @@ function TodoItem({
             <button
               type="button"
               onClick={handleSave}
-              className="rounded-md bg-blue-700 px-2 py-1 text-white shadow-sm hover:bg-blue-800"
+              className="rounded-md bg-blue-700 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-blue-800"
             >
               {saveLabel}
             </button>
             <button
               type="button"
               onClick={handleCancel}
-              className={`rounded-md px-2 py-1 shadow-sm ${
+              className={`rounded-md px-2.5 py-1.5 text-sm shadow-sm ${
                 darkMode
                   ? 'bg-slate-600 text-slate-100 hover:bg-slate-500'
                   : 'bg-gray-300 text-gray-800 hover:bg-gray-400'
@@ -108,7 +117,7 @@ function TodoItem({
             </button>
           </div>
         ) : (
-          <span className="text-left">{todo.text}</span>
+          <span className="text-left text-sm sm:text-base">{displayText}</span>
         )}
       </div>
 
@@ -117,7 +126,7 @@ function TodoItem({
           <button
             type="button"
             onClick={() => setIsEditing(true)}
-            className={`rounded-md px-2 py-1 text-sm shadow-sm ${
+            className={`rounded-md px-2.5 py-1.5 text-sm shadow-sm ${
               darkMode
                 ? 'bg-slate-600 text-slate-100 hover:bg-slate-500'
                 : 'bg-gray-300 text-gray-800 hover:bg-gray-400'
@@ -128,7 +137,7 @@ function TodoItem({
           <button
             type="button"
             onClick={() => onDelete(todo.id)}
-            className="rounded-md bg-red-500 px-2 py-1 text-sm text-white shadow-sm hover:bg-red-600"
+            className="rounded-md bg-red-500 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-red-600"
           >
             {deleteLabel}
           </button>

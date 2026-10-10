@@ -8,5 +8,14 @@
   "edit": "Modifier",
   "save": "Enregistrer",
   "cancel": "Annuler",
-  "language": "Langue"
+  "language": "Langue",
+  "searchPlaceholder": "Rechercher des tâches",
+  "filterAll": "Tout",
+  "filterActive": "Actives",
+  "filterCompleted": "Terminées",
+  "page": "Page",
+  "of": "sur",
+  "prev": "Préc.",
+  "next": "Suiv.",
+  "rows": "Lignes"
 }

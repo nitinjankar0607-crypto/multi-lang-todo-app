@@ -8,5 +8,14 @@
   "edit": "編集",
   "save": "保存",
   "cancel": "キャンセル",
-  "language": "言語"
+  "language": "言語",
+  "searchPlaceholder": "タスクを検索",
+  "filterAll": "すべて",
+  "filterActive": "進行中",
+  "filterCompleted": "完了",
+  "page": "ページ",
+  "of": "/",
+  "prev": "前へ",
+  "next": "次へ",
+  "rows": "件数"
 }

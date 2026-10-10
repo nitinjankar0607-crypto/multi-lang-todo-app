@@ -3,6 +3,7 @@ export type Todo = {
   text: string
   completed: boolean
   isSample?: boolean
+  translations?: Partial<Record<SupportedLocale, string>>
 }
 
 export type SupportedLocale =
